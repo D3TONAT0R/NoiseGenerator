@@ -1,64 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Numerics;
 using System.Text;
 
-namespace Utilities.SubPrograms {
-	public class PerlinGenerator : Utility {
+namespace NoiseGenerator {
+	public class PerlinGenerator {
 
-		public int textureSize;
+		public int textureSizeX;
+		public int textureSizeY;
 		public float scale;
-		public int iterations;
+		public int fractalIterations = 1;
+		public float fractalPersistence = -1;
+		public float fractalScale = 2f;
 
-		private Random random;
+		public PerlinGenerator(int sizeX, int sizeY, float pixelsPerCell) {
+			textureSizeX = Math.Max(1, sizeX);
+			textureSizeY = Math.Max(1, sizeY);
+			scale = Math.Max(1, pixelsPerCell);
+		}
 
-		public override void Start() {
-			random = new Random(12345);
-			Console.WriteLine("Size of the texture:");
-			textureSize = int.Parse(Console.ReadLine());
-			Console.WriteLine("Scale:");
-			scale = float.Parse(Console.ReadLine()) * 10f;
-			Console.WriteLine("Iterations (fractal noise):");
-			iterations = Math.Clamp(int.Parse(Console.ReadLine()), 1, 8);
-
-			float[,] tex = new float[textureSize, textureSize];
+		public float[,] Generate() {
+			if(fractalPersistence < 0) fractalPersistence = 0.5f;
+			float[,] tex = new float[textureSizeX, textureSizeY];
 			float intensity = 1f;
-			for(int i = 0; i < iterations; i++) {
-				for(int x = 0; x < textureSize; x++) {
-					for(int y = 0; y < textureSize; y++) {
-						float rx = (float)x / textureSize;
-						float ry = (float)y / textureSize;
-						float perlin = GetPerlinAt(rx * scale, ry * scale);
+			for(int i = 0; i < fractalIterations; i++) {
+				for(int x = 0; x < textureSizeX; x++) {
+					for(int y = 0; y < textureSizeY; y++) {
+						float perlin = GetPerlinAt(x / scale, y / scale);
 						if(i == 0) {
 							tex[x, y] = perlin;
 						} else {
-							tex[x, y] += perlin * intensity;
+							tex[x, y] += perlin * fractalPersistence;
 						}
 					}
 				}
-				scale *= 2f;
-				intensity *= 0.75f;
+				scale /= fractalScale;
+				intensity *= fractalPersistence;
+				if(scale <= 1) break; //We've reached the minimum scale of 1 cell per pixel, there is no need to continue
 			}
-
-			Bitmap bmp = new Bitmap(textureSize, textureSize);
-			for(int y = 0; y < textureSize; y++) {
-				for(int x = 0; x < textureSize; x++) {
-					float perlin = (tex[x, y] + 1f)/ 2f;
-					int v = Math.Clamp((int)(perlin * 255f), 0, 255);
-					Color c = Color.FromArgb(v, v, v);
-					bmp.SetPixel(x, y, c);
+			//Equalize output to the 0-1 range
+			for(int x = 0; x < textureSizeX; x++) {
+				for(int y = 0; y < textureSizeY; y++) {
+					tex[x, y] = DataConverter.EqualizePerlin(tex[x, y]);
 				}
 			}
-
-			int fn = 1;
-			string s = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "perlin-");
-			while(File.Exists(s+ fn + ".png")) {
-				fn++;
-			}
-			bmp.Save(s + fn + ".png", ImageFormat.Png);
+			return tex;
 		}
 
 		float DotGrid(int cx, int cy, float x, float y) {
@@ -69,8 +57,6 @@ namespace Utilities.SubPrograms {
 
 		float Lerp(float a, float b, float t) {
 			return (float)Math.Pow(t, 2f) * (3f - 2f * t) * (b - a) + a;
-			//return a + (b - a) * t;
-			//return t >= 0.5f ? b : a;
 		}
 
 		float GetPerlinAt(float x, float y) {
