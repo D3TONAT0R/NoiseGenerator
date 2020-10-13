@@ -27,5 +27,10 @@ namespace NoiseGenerator {
 			gen.fractalPersistence = fractalPersistence;
 			return gen.Generate();
 		}
+
+		public static float[,] GenerateVoronoi(int sizeX, int sizeY, int numOfPeaks, VoronoiGenerator.VoronoiType type) {
+			var gen = new VoronoiGenerator(sizeX, sizeY, numOfPeaks, type, 0);
+			return gen.Generate();
+		}
 	}
 }

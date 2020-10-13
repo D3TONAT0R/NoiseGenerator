@@ -8,6 +8,8 @@ using System.Text;
 namespace NoiseGenerator {
 	public class PerlinGenerator {
 
+		public float offsetX;
+		public float offsetY;
 		public int textureSizeX;
 		public int textureSizeY;
 		public float scale;
@@ -15,10 +17,17 @@ namespace NoiseGenerator {
 		public float fractalPersistence = -1;
 		public float fractalScale = 2f;
 
-		public PerlinGenerator(int sizeX, int sizeY, float pixelsPerCell) {
+		public PerlinGenerator(int sizeX, int sizeY, float pixelsPerCell) : this(sizeX, sizeY,pixelsPerCell, 0) { }
+
+		public PerlinGenerator(int sizeX, int sizeY, float pixelsPerCell, int seed) {
 			textureSizeX = Math.Max(1, sizeX);
 			textureSizeY = Math.Max(1, sizeY);
 			scale = Math.Max(1, pixelsPerCell);
+			if(seed != 0) {
+				Random r = new Random();
+				offsetX = ((float)r.NextDouble() - 0.5f) * 65535f;
+				offsetY = ((float)r.NextDouble() - 0.5f) * 65535f;
+			}
 		}
 
 		public float[,] Generate() {
