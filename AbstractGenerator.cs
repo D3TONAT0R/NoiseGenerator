@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using NoiseGenerator.Utils;
+using System;
 
 namespace NoiseGenerator {
 	public abstract class AbstractGenerator {
 
-		public int textureSizeX;
-		public int textureSizeY;
+		public RangedInt textureSizeX = new RangedInt(128, 1, 8192);
+		public RangedInt textureSizeY = new RangedInt(128, 1, 8192);
 
 		public AbstractGenerator(int sizeX, int sizeY) {
-			textureSizeX = Math.Max(1, sizeX);
-			textureSizeY = Math.Max(1, sizeY);
+			textureSizeX.value = sizeX;
+			textureSizeY.value = sizeY;
 		}
 
 		public abstract float[,] Generate();

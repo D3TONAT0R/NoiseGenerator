@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NoiseGenerator.Utils;
+using System;
 using System.Numerics;
-using System.Text;
 
 namespace NoiseGenerator {
 	public class VoronoiGenerator : AbstractGenerator {
@@ -15,7 +14,7 @@ namespace NoiseGenerator {
 		public VoronoiType type;
 		private Vector2[] peaks;
 		private float[] peakHeights;
-		private int outlineWidth = 1;
+		public RangedInt outlineWidth = new RangedInt(1, 0, 8);
 
 		public VoronoiGenerator(int sizeX, int sizeY, int numPeaks, VoronoiType voronoiType, int seed) : base(sizeX, sizeY) {
 			type = voronoiType;
@@ -124,7 +123,7 @@ namespace NoiseGenerator {
 					for(int nx = x - outlineWidth; nx <= x + outlineWidth; nx++) {
 						for(int ny = y - outlineWidth; ny <= y + outlineWidth; ny++) {
 							if(nx < 0 || ny < 0 || nx >= textureSizeX || ny >= textureSizeY) continue;
-							if(tex[nx,ny] != target) {
+							if(tex[nx, ny] != target) {
 								map[x, y] = true;
 								break;
 							}

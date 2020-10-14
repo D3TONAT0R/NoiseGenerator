@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NoiseGenerator {
+﻿namespace NoiseGenerator {
 	public class NoiseGen {
 
 		public static byte[,] CreateBitmapData(float[,] data) {
@@ -23,7 +19,7 @@ namespace NoiseGenerator {
 
 		public static float[,] GeneratePerlinFractal(int sizeX, int sizeY, float pixelsPerCell, int fractalIterations, float fractalPersistence) {
 			var gen = new PerlinGenerator(sizeX, sizeY, pixelsPerCell);
-			gen.fractalIterations = fractalIterations;
+			gen.fractalIterations.value = fractalIterations;
 			gen.fractalPersistence = fractalPersistence;
 			return gen.Generate();
 		}

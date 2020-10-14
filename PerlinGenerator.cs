@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
+﻿using NoiseGenerator.Utils;
+using System;
 using System.Numerics;
-using System.Text;
 
 namespace NoiseGenerator {
 	public class PerlinGenerator : AbstractGenerator {
 
 		public float offsetX;
 		public float offsetY;
-		public float scale;
-		public int fractalIterations = 1;
+		public RangedFloat scale = new RangedFloat(1f, 0.001f, 1000f);
+		public RangedInt fractalIterations = new RangedInt(1, 1, 16);
 		public float fractalPersistence = -1;
 		public float fractalScale = 2f;
 
-		public PerlinGenerator(int sizeX, int sizeY, float pixelsPerCell) : this(sizeX, sizeY,pixelsPerCell, 0) { }
+		public PerlinGenerator(int sizeX, int sizeY, float pixelsPerCell) : this(sizeX, sizeY, pixelsPerCell, 0) { }
 
 		public PerlinGenerator(int sizeX, int sizeY, float pixelsPerCell, int seed) : base(sizeX, sizeY) {
-			textureSizeX = Math.Max(1, sizeX);
-			textureSizeY = Math.Max(1, sizeY);
-			scale = Math.Max(1, pixelsPerCell);
+			scale.value = Math.Max(1, pixelsPerCell);
 			if(seed != 0) {
 				Random r = new Random();
 				offsetX = ((float)r.NextDouble() - 0.5f) * 65535f;
@@ -43,7 +38,7 @@ namespace NoiseGenerator {
 						}
 					}
 				}
-				scale /= fractalScale;
+				scale.value /= fractalScale;
 				intensity *= fractalPersistence;
 				if(scale <= 1) break; //We've reached the minimum scale of 1 cell per pixel, there is no need to continue
 			}
@@ -57,7 +52,7 @@ namespace NoiseGenerator {
 		}
 
 		float DotGrid(int cx, int cy, float x, float y) {
-			var vec = GetRandomDirectionVector(cx,cy);
+			var vec = GetRandomDirectionVector(cx, cy);
 			var local = new Vector2(x - cx, y - cy);
 			return Vector2.Dot(local, vec);
 		}
