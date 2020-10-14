@@ -6,12 +6,10 @@ using System.Numerics;
 using System.Text;
 
 namespace NoiseGenerator {
-	public class PerlinGenerator {
+	public class PerlinGenerator : AbstractGenerator {
 
 		public float offsetX;
 		public float offsetY;
-		public int textureSizeX;
-		public int textureSizeY;
 		public float scale;
 		public int fractalIterations = 1;
 		public float fractalPersistence = -1;
@@ -19,7 +17,7 @@ namespace NoiseGenerator {
 
 		public PerlinGenerator(int sizeX, int sizeY, float pixelsPerCell) : this(sizeX, sizeY,pixelsPerCell, 0) { }
 
-		public PerlinGenerator(int sizeX, int sizeY, float pixelsPerCell, int seed) {
+		public PerlinGenerator(int sizeX, int sizeY, float pixelsPerCell, int seed) : base(sizeX, sizeY) {
 			textureSizeX = Math.Max(1, sizeX);
 			textureSizeY = Math.Max(1, sizeY);
 			scale = Math.Max(1, pixelsPerCell);
@@ -30,7 +28,7 @@ namespace NoiseGenerator {
 			}
 		}
 
-		public float[,] Generate() {
+		public override float[,] Generate() {
 			if(fractalPersistence < 0) fractalPersistence = 0.5f;
 			float[,] tex = new float[textureSizeX, textureSizeY];
 			float intensity = 1f;

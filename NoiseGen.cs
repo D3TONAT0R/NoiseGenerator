@@ -32,5 +32,10 @@ namespace NoiseGenerator {
 			var gen = new VoronoiGenerator(sizeX, sizeY, numOfPeaks, type, 0);
 			return gen.Generate();
 		}
+
+		public static float[,] GenerateDrunkardLines(int sizeX, int sizeY, int numOfLines) {
+			var gen = new DrunkardLinesGenerator(sizeX, sizeY, numOfLines);
+			return gen.Generate();
+		}
 	}
 }

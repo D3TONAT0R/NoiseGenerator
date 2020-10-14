@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Text;
 
 namespace NoiseGenerator {
-	public class VoronoiGenerator {
+	public class VoronoiGenerator : AbstractGenerator {
 
 		public enum VoronoiType {
 			Simple,
@@ -12,16 +12,12 @@ namespace NoiseGenerator {
 			Plateaus
 		}
 
-		public int textureSizeX;
-		public int textureSizeY;
 		public VoronoiType type;
 		private Vector2[] peaks;
 		private float[] peakHeights;
-		private int outlineWidth = 2;
+		private int outlineWidth = 1;
 
-		public VoronoiGenerator(int sizeX, int sizeY, int numPeaks, VoronoiType voronoiType, int seed) {
-			textureSizeX = Math.Max(1, sizeX);
-			textureSizeY = Math.Max(1, sizeY);
+		public VoronoiGenerator(int sizeX, int sizeY, int numPeaks, VoronoiType voronoiType, int seed) : base(sizeX, sizeY) {
 			type = voronoiType;
 			Random r = seed == 0 ? new Random() : new Random(seed);
 			peaks = new Vector2[numPeaks];
@@ -32,7 +28,7 @@ namespace NoiseGenerator {
 			}
 		}
 
-		public float[,] Generate() {
+		public override float[,] Generate() {
 			float[,] tex = new float[textureSizeX, textureSizeY];
 			for(int x = 0; x < textureSizeX; x++) {
 				for(int y = 0; y < textureSizeY; y++) {
