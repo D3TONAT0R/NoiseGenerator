@@ -29,8 +29,9 @@
 			return gen.Generate();
 		}
 
-		public static float[,] GenerateDrunkardLines(int sizeX, int sizeY, int numOfLines) {
+		public static float[,] GenerateDrunkardLines(int sizeX, int sizeY, int numOfLines, DrunkardLinesGenerator.Mode mode) {
 			var gen = new DrunkardLinesGenerator(sizeX, sizeY, numOfLines);
+			gen.mode = mode;
 			return gen.Generate();
 		}
 	}
