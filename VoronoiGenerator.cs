@@ -27,7 +27,7 @@ namespace NoiseGenerator {
 			}
 		}
 
-		public override float[,] Generate() {
+		public override float[,] GenerateNoiseMap() {
 			float[,] tex = new float[textureSizeX, textureSizeY];
 			for(int x = 0; x < textureSizeX; x++) {
 				for(int y = 0; y < textureSizeY; y++) {

@@ -19,12 +19,12 @@ namespace NoiseGenerator {
 		private Random random;
 
 		public DrunkardLinesGenerator(int sizeX, int sizeY, int numLines) : base(sizeX, sizeY) {
-			lines.value = numLines;
+			lines.Value = numLines;
 			avgLineLength = (sizeX + sizeY) / 2;
 			random = new Random();
 		}
 
-		public override float[,] Generate() {
+		public override float[,] GenerateNoiseMap() {
 			float[,] tex = new float[textureSizeX, textureSizeY];
 			for(int i = 0; i < lines; i++) {
 				float value = (float)random.NextDouble() * 0.75f + 0.25f;

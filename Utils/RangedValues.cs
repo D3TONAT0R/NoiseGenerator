@@ -5,7 +5,7 @@ using System;
 namespace NoiseGenerator.Utils {
 	public struct RangedFloat {
 
-		public float value {
+		public float Value {
 			get { return v; }
 			set {
 				v = Math.Max(min, Math.Min(max, value));
@@ -24,13 +24,13 @@ namespace NoiseGenerator.Utils {
 		}
 
 		public static implicit operator float(RangedFloat r) {
-			return r.value;
+			return r.Value;
 		}
 	}
 
 	public struct RangedInt {
 
-		public int value {
+		public int Value {
 			get { return v; }
 			set {
 				v = Math.Max(min, Math.Min(max, value));
@@ -49,7 +49,7 @@ namespace NoiseGenerator.Utils {
 		}
 
 		public static implicit operator int(RangedInt r) {
-			return r.value;
+			return r.Value;
 		}
 	}
 }

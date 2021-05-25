@@ -8,10 +8,10 @@ namespace NoiseGenerator {
 		public RangedInt textureSizeY = new RangedInt(128, 1, 8192);
 
 		public AbstractGenerator(int sizeX, int sizeY) {
-			textureSizeX.value = sizeX;
-			textureSizeY.value = sizeY;
+			textureSizeX.Value = sizeX;
+			textureSizeY.Value = sizeY;
 		}
 
-		public abstract float[,] Generate();
+		public abstract float[,] GenerateNoiseMap();
 	}
 }
