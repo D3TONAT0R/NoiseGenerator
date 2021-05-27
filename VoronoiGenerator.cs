@@ -3,7 +3,7 @@ using System;
 using System.Numerics;
 
 namespace NoiseGenerator {
-	public class VoronoiGenerator : AbstractGenerator {
+	public class VoronoiGenerator : Generator {
 
 		public enum VoronoiType {
 			Simple,
@@ -16,7 +16,7 @@ namespace NoiseGenerator {
 		private float[] peakHeights;
 		public RangedInt outlineWidth = new RangedInt(1, 0, 8);
 
-		public VoronoiGenerator(int sizeX, int sizeY, int numPeaks, VoronoiType voronoiType, int seed) : base(sizeX, sizeY) {
+		public VoronoiGenerator(int numPeaks, VoronoiType voronoiType, int seed) {
 			type = voronoiType;
 			Random r = seed == 0 ? new Random() : new Random(seed);
 			peaks = new Vector2[numPeaks];
@@ -27,26 +27,26 @@ namespace NoiseGenerator {
 			}
 		}
 
-		public override float[,] GenerateNoiseMap() {
-			float[,] tex = new float[textureSizeX, textureSizeY];
-			for(int x = 0; x < textureSizeX; x++) {
-				for(int y = 0; y < textureSizeY; y++) {
-					float voronoi = GetVoronoiAt(x / (float)textureSizeX, y / (float)textureSizeY);
-					tex[x, y] = voronoi;
+		protected override void GenerateNoiseMap(float[,] map) {
+			int width = map.GetLength(0);
+			int height = map.GetLength(1);
+			for(int x = 0; x < width; x++) {
+				for(int y = 0; y < height; y++) {
+					float voronoi = GetVoronoiAt(x / (float)width, y / (float)height);
+					map[x, y] = voronoi;
 				}
 			}
 			if(type == VoronoiType.Plateaus && outlineWidth > 0) {
-				var outline = GetOutlineMap(tex);
-				for(int x = 0; x < textureSizeX; x++) {
-					for(int y = 0; y < textureSizeY; y++) {
+				var outline = GetOutlineMap(map);
+				for(int x = 0; x < width; x++) {
+					for(int y = 0; y < height; y++) {
 						if(outline[x, y]) {
 							//Draw black outlines
-							tex[x, y] = 0;
+							map[x, y] = 0;
 						}
 					}
 				}
 			}
-			return tex;
 		}
 
 		public float GetVoronoiAt(float x, float y) {
@@ -115,14 +115,14 @@ namespace NoiseGenerator {
 		}
 
 		private bool[,] GetOutlineMap(float[,] tex) {
-			bool[,] map = new bool[textureSizeX, textureSizeY];
-			for(int x = 0; x < textureSizeX; x++) {
-				for(int y = 0; y < textureSizeY; y++) {
+			bool[,] map = new bool[tex.GetLength(0), tex.GetLength(1)];
+			for(int x = 0; x < tex.GetLength(0); x++) {
+				for(int y = 0; y < tex.GetLength(1); y++) {
 					float target = tex[x, y];
 					//Scan all pixels near point
 					for(int nx = x - outlineWidth; nx <= x + outlineWidth; nx++) {
 						for(int ny = y - outlineWidth; ny <= y + outlineWidth; ny++) {
-							if(nx < 0 || ny < 0 || nx >= textureSizeX || ny >= textureSizeY) continue;
+							if(nx < 0 || ny < 0 || nx >= tex.GetLength(0) || ny >= tex.GetLength(1)) continue;
 							if(tex[nx, ny] != target) {
 								map[x, y] = true;
 								break;

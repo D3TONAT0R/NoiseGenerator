@@ -2,7 +2,7 @@
 using System;
 
 namespace NoiseGenerator {
-	public class DrunkardLinesGenerator : AbstractGenerator {
+	public class DrunkardLinesGenerator : Generator {
 
 		public enum Mode {
 			Manhattan,
@@ -18,29 +18,29 @@ namespace NoiseGenerator {
 
 		private Random random;
 
-		public DrunkardLinesGenerator(int sizeX, int sizeY, int numLines) : base(sizeX, sizeY) {
+		public DrunkardLinesGenerator(int sizeX, int sizeY, int numLines) {
 			lines.Value = numLines;
 			avgLineLength = (sizeX + sizeY) / 2;
 			random = new Random();
 		}
 
-		public override float[,] GenerateNoiseMap() {
-			float[,] tex = new float[textureSizeX, textureSizeY];
+		protected override void GenerateNoiseMap(float[,] map) {
+			var width = map.Width();
+			var height = map.Height();
 			for(int i = 0; i < lines; i++) {
 				float value = (float)random.NextDouble() * 0.75f + 0.25f;
 				if(mode == Mode.Manhattan) {
-					DrunkardFixed(tex, random.Next(textureSizeX), random.Next(textureSizeY), -1, avgLineLength, value);
+					DrunkardFixed(map, random.Next(width), random.Next(height), -1, avgLineLength, value);
 				} else {
-					DrunkardFreeform(tex, (float)random.NextDouble() * textureSizeX, (float)random.NextDouble() * textureSizeY, random.Next(0, 360), avgLineLength, value);
+					DrunkardFreeform(map, (float)random.NextDouble() * width, (float)random.NextDouble() * height, random.Next(0, 360), avgLineLength, value);
 				}
 			}
-			return tex;
 		}
 
 		void DrunkardFixed(float[,] tex, int x, int y, int d, int length, float value) {
 			while(length > 0) {
 				length--;
-				if(x < 0 || y < 0 || x >= textureSizeX || y >= textureSizeX) return;
+				if(x < 0 || y < 0 || x >= tex.Width() || y >= tex.Height()) return;
 				if(tex[x, y] == 0) {
 					tex[x, y] = value;
 				} else {
@@ -93,7 +93,7 @@ namespace NoiseGenerator {
 		}
 
 		void SetValueAtIndex(float[,] tex, int x, int y, float v, float weight) {
-			if(x < 0 || y < 0 || x >= textureSizeX || y >= textureSizeY) return;
+			if(x < 0 || y < 0 || x >= tex.Width() || y >= tex.Height()) return;
 			if(weight <= 0) return;
 			var old = tex[x, y];
 			if(v > old) {
