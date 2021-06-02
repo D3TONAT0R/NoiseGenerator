@@ -95,7 +95,8 @@ namespace NoiseGenerator
 
 			for (int i = 0; i < fractalIterations; i++)
 			{
-				Vector3 pos = new Vector3(offsetX + coords[0] * s.X, offsetY + coords[1] * s.Y, offsetZ + coords[2] * s.Z);
+				var z = coords.Length > 2 ? coords[2] : 0f;
+				Vector3 pos = new Vector3(offsetX + coords[0] * s.X, offsetY + coords[1] * s.Y, offsetZ + z * s.Z);
 				float perlin;
 				if (coords.Length == 2)
 				{
