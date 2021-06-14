@@ -39,7 +39,7 @@ namespace NoiseGenerator
 			{
 				for (int y = 0; y < map.GetLength(1); y++)
 				{
-					//map[x, y] = GetPerlinAtCoord(x, y);
+					map[x, y] = GetPerlinAtCoord(x, y);
 				}
 			}
 		}
