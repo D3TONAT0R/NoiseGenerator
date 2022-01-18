@@ -182,8 +182,8 @@ namespace NoiseGenerator
 
 		static Vector3 GetRandomDirectionVector(int ix, int iy, int iz)
 		{
-			float random = (float)(2920f * Math.Sin(ix * 21942f + iy * 171324f + 8912f) * Math.Cos(ix * 23157f * iy * 217832f + 9758f));
-			var vec = new Vector3((float)Math.Sin(random), (float)Math.Cos(random), (float)Math.Sin(random * random * 18.181f + iz*0.11253f));
+			float random = (float)(2920f * Math.Sin(ix * 21942f + iy * 171324f + iz * 7867f + 8912f) * Math.Cos(ix * 23157f * iy * 217832f + iz * 6703f + 9758f));
+			var vec = new Vector3((float)Math.Sin(random), (float)Math.Cos(random), (float)Math.Sin(random * 18.181f + iz * 151.11253f));
 			return Vector3.Normalize(vec);
 		}
 	}
