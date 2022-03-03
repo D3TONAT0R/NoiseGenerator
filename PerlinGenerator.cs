@@ -15,9 +15,11 @@ namespace NoiseGenerator
 		public float fractalPersistence = -1;
 		public float fractalScale = 2f;
 
-		public PerlinGenerator(float scale) : this(new Vector3(scale, scale, scale), -1) { }
+		public bool equalize;
 
-		public PerlinGenerator(Vector3 scale, int seed)
+		public PerlinGenerator(float scale, bool equalizeOutput = false) : this(new Vector3(scale, scale, scale), -1, equalizeOutput) { }
+
+		public PerlinGenerator(Vector3 scale, int seed, bool equalizeOutput = false)
 		{
 			this.scale = scale;
 			if (seed == -1)
@@ -31,6 +33,7 @@ namespace NoiseGenerator
 				offsetY = (float)r.NextDouble() * 65535f;
 				offsetZ = (float)r.NextDouble() * 65535f;
 			}
+			equalize = equalizeOutput;
 		}
 
 		protected override void GenerateNoiseMap(float[,] map)
@@ -106,6 +109,9 @@ namespace NoiseGenerator
 				{
 					perlin = CalcPerlin(pos.X, pos.Y, pos.Z);
 				}
+
+				if (equalize) perlin = EqualizeRawPerlin(perlin);
+
 				if (i == 0)
 				{
 					v = perlin;
@@ -139,8 +145,16 @@ namespace NoiseGenerator
 
 			//Interpolate on the y axis
 			float value = Lerp(ix1, ix2, wy);
-
+			
 			return value;
+		}
+
+		float EqualizeRawPerlin(float perlin)
+		{
+			perlin = MathUtils.Remap(perlin, -1, 1, 0, 1);
+			perlin = MathUtils.Remap(perlin, 0.1f, 0.9f, 0, 1);
+			perlin = MathUtils.AdvancedSmoothStep(perlin, 0.5f, 0.5f);
+			return MathUtils.Remap(perlin, 0, 1, -1, 1);
 		}
 
 		float CalcPerlin(float x, float y, float z)

@@ -25,22 +25,22 @@ namespace NoiseGenerator
 			return GeneratePerlinFractal(sizeX, sizeY, 1f / pixelsPerCell, 8, -1);
 		}
 
-		public static float[,] GeneratePerlinFractal(int sizeX, int sizeY, float pixelsPerCell, int fractalIterations)
+		public static float[,] GeneratePerlinFractal(int sizeX, int sizeY, float pixelsPerCell, int fractalIterations, bool equalized = false)
 		{
-			return GeneratePerlinFractal(sizeX, sizeY, 1f / pixelsPerCell, fractalIterations, -1);
+			return GeneratePerlinFractal(sizeX, sizeY, 1f / pixelsPerCell, fractalIterations, -1, equalized);
 		}
 
-		public static float[,] GeneratePerlinFractal(int sizeX, int sizeY, float scale, int fractalIterations, float fractalPersistence)
+		public static float[,] GeneratePerlinFractal(int sizeX, int sizeY, float scale, int fractalIterations, float fractalPersistence, bool equalized = false)
 		{
-			var gen = new PerlinGenerator(scale);
+			var gen = new PerlinGenerator(scale, equalized);
 			gen.fractalIterations.Value = fractalIterations;
 			gen.fractalPersistence = fractalPersistence;
 			return gen.Generate(sizeX, sizeY);
 		}
 
-		public static float[,,] GeneratePerlinFractal3D(int sizeX, int sizeY, int sizeZ, Vector3 scale, int fractalIterations, float fractalPersistence)
+		public static float[,,] GeneratePerlinFractal3D(int sizeX, int sizeY, int sizeZ, Vector3 scale, int fractalIterations, float fractalPersistence, bool equalized = false)
 		{
-			var gen = new PerlinGenerator(scale, -1);
+			var gen = new PerlinGenerator(scale, -1, equalized);
 			gen.fractalIterations.Value = fractalIterations;
 			gen.fractalPersistence = fractalPersistence;
 			var map = gen.Generate(sizeX, sizeY, sizeZ);
